@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuis Interaktif Custom</title>
+<style>
+    :root{
+        --primary:#ff6b6b;
+        --secondary:#4ecdc4;
+        --bg:#f7f9fc;
+    }
+
+    body{
+        font-family: Arial, sans-serif;
+        background: var(--bg);
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        height:100vh;
+        margin:0;
+    }
+
+    .quiz-box{
+        background:white;
+        padding:30px;
+        width:400px;
+        border-radius:15px;
+        box-shadow:0 10px 25px rgba(0,0,0,0.1);
+        text-align:center;
+    }
+
+    h2{
+        margin-bottom:15px;
+    }
+
+    .btn{
+        display:block;
+        margin:10px 0;
+        padding:10px;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+        background:var(--secondary);
+        color:white;
+        font-weight:bold;
+        transition:0.3s;
+    }
+
+    .btn:hover{
+        background:var(--primary);
+    }
+
+    .timer{
+        font-size:14px;
+        margin-bottom:10px;
+        color:#666;
+    }
+
+    .result{
+        font-size:18px;
+        font-weight:bold;
+    }
+</style>
+</head>
+<body>
+
+<div class="quiz-box">
+    <h2 id="question">Loading...</h2>
+    <div class="timer">Waktu: <span id="time">15</span> detik</div>
+    <div id="answers"></div>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+// ===========================
+// CUSTOM PERTANYAAN DI SINI
+// ===========================
+const quizData = [
+    {
+        question: "Apa ibu kota Indonesia?",
+        answers: ["Bandung", "Jakarta", "Surabaya", "Medan"],
+        correct: 1
+    },
+    {
+        question: "2 + 5 = ?",
+        answers: ["5", "6", "7", "8"],
+        correct: 2
+    },
+    {
+        question: "Hari raya umat Islam?",
+        answers: ["Natal", "Imlek", "Idul Fitri", "Waisak"],
+        correct: 2
+    }
+];
+
+// ===========================
+
+let currentQuestion = 0;
+let score = 0;
+let timer;
+let timeLeft = 15;
+
+const questionEl = document.getElementById("question");
+const answersEl = document.getElementById("answers");
+const resultEl = document.getElementById("result");
+const timeEl = document.getElementById("time");
+
+function startTimer(){
+    timeLeft = 15; // UBAH WAKTU DI SINI
+    timeEl.textContent = timeLeft;
+    timer = setInterval(()=>{
+        timeLeft--;
+        timeEl.textContent = timeLeft;
+        if(timeLeft <= 0){
+            clearInterval(timer);
+            nextQuestion();
+        }
+    },1000);
+}
+
+function loadQuestion(){
+    clearInterval(timer);
+    const data = quizData[currentQuestion];
+    questionEl.textContent = data.question;
+    answersEl.innerHTML = "";
+    resultEl.textContent = "";
+
+    data.answers.forEach((answer,index)=>{
+        const btn = document.createElement("button");
+        btn.textContent = answer;
+        btn.classList.add("btn");
+        btn.onclick = ()=>checkAnswer(index);
+        answersEl.appendChild(btn);
+    });
+
+    startTimer();
+}
+
+function checkAnswer(index){
+    clearInterval(timer);
+    if(index === quizData[currentQuestion].correct){
+        score++;
+    }
+    nextQuestion();
+}
+
+function nextQuestion(){
+    currentQuestion++;
+    if(currentQuestion < quizData.length){
+        loadQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult(){
+    questionEl.textContent = "Kuis Selesai!";
+    answersEl.innerHTML = "";
+    resultEl.textContent = "Skor kamu: " + score + " dari " + quizData.length;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
