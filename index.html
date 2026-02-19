@@ -3,12 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kuis Interaktif</title>
-
+<title>Kuis Interaktif Custom</title>
 <style>
+    :root{
+        --primary:#ff6b6b;
+        --secondary:#4ecdc4;
+        --bg:#f7f9fc;
+    }
+
     body{
         font-family: Arial, sans-serif;
-        background: #f7f9fc;
+        background: var(--bg);
         display:flex;
         justify-content:center;
         align-items:center;
@@ -26,59 +31,51 @@
     }
 
     h2{
-        margin-bottom:20px;
+        margin-bottom:15px;
     }
 
     .btn{
         display:block;
-        width:100%;
         margin:10px 0;
         padding:10px;
         border:none;
         border-radius:8px;
         cursor:pointer;
-        background:#4ecdc4;
+        background:var(--secondary);
         color:white;
         font-weight:bold;
         transition:0.3s;
     }
 
     .btn:hover{
-        background:#ff6b6b;
+        background:var(--primary);
+    }
+
+    .timer{
+        font-size:14px;
+        margin-bottom:10px;
+        color:#666;
     }
 
     .result{
         font-size:18px;
         font-weight:bold;
-        margin-top:15px;
-    }
-
-    .winner{
-        margin-top:15px;
-        padding:10px 15px;
-        background:#ff6b6b;
-        color:white;
-        border-radius:8px;
-        font-weight:bold;
-        text-decoration:none;
-        display:inline-block;
     }
 </style>
 </head>
-
 <body>
 
 <div class="quiz-box">
     <h2 id="question">Loading...</h2>
+    <div class="timer">Waktu: <span id="time">15</span> detik</div>
     <div id="answers"></div>
     <div class="result" id="result"></div>
 </div>
 
 <script>
-
-// =======================
+// ===========================
 // CUSTOM PERTANYAAN DI SINI
-// =======================
+// ===========================
 const quizData = [
     {
         question: "Apa ibu kota Indonesia?",
@@ -96,20 +93,38 @@ const quizData = [
         correct: 2
     }
 ];
-// =======================
+
+// ===========================
 
 let currentQuestion = 0;
 let score = 0;
+let timer;
+let timeLeft = 15;
 
 const questionEl = document.getElementById("question");
 const answersEl = document.getElementById("answers");
 const resultEl = document.getElementById("result");
+const timeEl = document.getElementById("time");
+
+function startTimer(){
+    timeLeft = 15; // UBAH WAKTU DI SINI
+    timeEl.textContent = timeLeft;
+    timer = setInterval(()=>{
+        timeLeft--;
+        timeEl.textContent = timeLeft;
+        if(timeLeft <= 0){
+            clearInterval(timer);
+            nextQuestion();
+        }
+    },1000);
+}
 
 function loadQuestion(){
+    clearInterval(timer);
     const data = quizData[currentQuestion];
     questionEl.textContent = data.question;
     answersEl.innerHTML = "";
-    resultEl.innerHTML = "";
+    resultEl.textContent = "";
 
     data.answers.forEach((answer,index)=>{
         const btn = document.createElement("button");
@@ -118,15 +133,20 @@ function loadQuestion(){
         btn.onclick = ()=>checkAnswer(index);
         answersEl.appendChild(btn);
     });
+
+    startTimer();
 }
 
 function checkAnswer(index){
+    clearInterval(timer);
     if(index === quizData[currentQuestion].correct){
         score++;
     }
+    nextQuestion();
+}
 
+function nextQuestion(){
     currentQuestion++;
-
     if(currentQuestion < quizData.length){
         loadQuestion();
     } else {
@@ -140,22 +160,29 @@ function showResult(){
 
     resultEl.innerHTML = "Skor kamu: " + score + " dari " + quizData.length;
 
+    // Jika semua jawaban benar
     if(score === quizData.length){
         resultEl.innerHTML += `
             <br><br>
             🎉 Selamat! Kamu menjawab semua dengan benar! 🎉
             <br><br>
-            <a href="https://docs.google.com/forms/d/ISI_LINK_GOOGLE_FORM_KAMU"
+            <a href="https://forms.gle/rKVnJjrtDW9S8dEf9"
                target="_blank"
-               class="winner">
-               Isi Data Pemenang
+               style="display:inline-block;
+                      padding:10px 15px;
+                      background:#ff6b6b;
+                      color:white;
+                      text-decoration:none;
+                      border-radius:8px;
+                      font-weight:bold;">
+               Klik di sini untuk isi data pemenang
             </a>
         `;
     }
 }
 
-loadQuestion();
 
+loadQuestion();
 </script>
 
 </body>
