@@ -166,7 +166,7 @@ function showResult(){
             <br><br>
             🎉 Selamat! Kamu menjawab semua dengan benar! 🎉
             <br><br>
-            <a href="https://forms.gle/rKVnJjrtDW9S8dEf9"
+            <a href="https://docs.google.com/forms/d/ISI_LINK_GOOGLE_FORM_KAMU"
                target="_blank"
                style="display:inline-block;
                       padding:10px 15px;
@@ -175,11 +175,29 @@ function showResult(){
                       text-decoration:none;
                       border-radius:8px;
                       font-weight:bold;">
-               Klik di sini untuk isi data pemenang
+               Isi Data Pemenang
             </a>
+        `;
+    } 
+    else {
+        resultEl.innerHTML += `
+            <br><br>
+            ❌ Jawaban belum semua benar.
+            <br><br>
+            <button onclick="restartQuiz()"
+                style="padding:10px 15px;
+                       background:#4ecdc4;
+                       border:none;
+                       color:white;
+                       border-radius:8px;
+                       font-weight:bold;
+                       cursor:pointer;">
+                Ulangi Kuis
+            </button>
         `;
     }
 }
+
 
 
 loadQuestion();
