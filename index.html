@@ -157,8 +157,30 @@ function nextQuestion(){
 function showResult(){
     questionEl.textContent = "Kuis Selesai!";
     answersEl.innerHTML = "";
-    resultEl.textContent = "Skor kamu: " + score + " dari " + quizData.length;
+
+    resultEl.innerHTML = "Skor kamu: " + score + " dari " + quizData.length;
+
+    // Jika semua jawaban benar
+    if(score === quizData.length){
+        resultEl.innerHTML += `
+            <br><br>
+            🎉 Selamat! Kamu menjawab semua dengan benar! 🎉
+            <br><br>
+            <a href="https://forms.gle/rKVnJjrtDW9S8dEf9"
+               target="_blank"
+               style="display:inline-block;
+                      padding:10px 15px;
+                      background:#ff6b6b;
+                      color:white;
+                      text-decoration:none;
+                      border-radius:8px;
+                      font-weight:bold;">
+               Klik di sini untuk isi data pemenang
+            </a>
+        `;
+    }
 }
+
 
 loadQuestion();
 </script>
