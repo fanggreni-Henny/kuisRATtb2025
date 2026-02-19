@@ -184,7 +184,7 @@ function showResult(){
             <br><br>
             ❌ Jawaban belum semua benar.
             <br><br>
-            <button id="retryBtn"
+            <button onclick="location.reload()"
                 style="padding:10px 15px;
                        background:#4ecdc4;
                        border:none;
@@ -195,24 +195,7 @@ function showResult(){
                 Ulangi Kuis
             </button>
         `;
-
-        // Tambahkan event listener setelah tombol dibuat
-        document.getElementById("retryBtn").addEventListener("click", restartQuiz);
     }
-}
-
-
-
-function restartQuiz(){
-    clearInterval(timer);
-
-    currentQuestion = 0;
-    score = 0;
-    timeLeft = 15;
-
-    resultEl.innerHTML = "";
-
-    loadQuestion();
 }
 
 
