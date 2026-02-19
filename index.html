@@ -40,4 +40,123 @@
         background:#4ecdc4;
         color:white;
         font-weight:bold;
-        transition
+        transition:0.3s;
+    }
+
+    .btn:hover{
+        background:#ff6b6b;
+    }
+
+    .result{
+        font-size:18px;
+        font-weight:bold;
+        margin-top:15px;
+    }
+
+    .winner{
+        margin-top:15px;
+        padding:10px 15px;
+        background:#ff6b6b;
+        color:white;
+        border-radius:8px;
+        font-weight:bold;
+        text-decoration:none;
+        display:inline-block;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="quiz-box">
+    <h2 id="question">Loading...</h2>
+    <div id="answers"></div>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+
+// =======================
+// CUSTOM PERTANYAAN DI SINI
+// =======================
+const quizData = [
+    {
+        question: "Apa ibu kota Indonesia?",
+        answers: ["Bandung", "Jakarta", "Surabaya", "Medan"],
+        correct: 1
+    },
+    {
+        question: "2 + 5 = ?",
+        answers: ["5", "6", "7", "8"],
+        correct: 2
+    },
+    {
+        question: "Hari raya umat Islam?",
+        answers: ["Natal", "Imlek", "Idul Fitri", "Waisak"],
+        correct: 2
+    }
+];
+// =======================
+
+let currentQuestion = 0;
+let score = 0;
+
+const questionEl = document.getElementById("question");
+const answersEl = document.getElementById("answers");
+const resultEl = document.getElementById("result");
+
+function loadQuestion(){
+    const data = quizData[currentQuestion];
+    questionEl.textContent = data.question;
+    answersEl.innerHTML = "";
+    resultEl.innerHTML = "";
+
+    data.answers.forEach((answer,index)=>{
+        const btn = document.createElement("button");
+        btn.textContent = answer;
+        btn.classList.add("btn");
+        btn.onclick = ()=>checkAnswer(index);
+        answersEl.appendChild(btn);
+    });
+}
+
+function checkAnswer(index){
+    if(index === quizData[currentQuestion].correct){
+        score++;
+    }
+
+    currentQuestion++;
+
+    if(currentQuestion < quizData.length){
+        loadQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult(){
+    questionEl.textContent = "Kuis Selesai!";
+    answersEl.innerHTML = "";
+
+    resultEl.innerHTML = "Skor kamu: " + score + " dari " + quizData.length;
+
+    if(score === quizData.length){
+        resultEl.innerHTML += `
+            <br><br>
+            🎉 Selamat! Kamu menjawab semua dengan benar! 🎉
+            <br><br>
+            <a href="https://docs.google.com/forms/d/ISI_LINK_GOOGLE_FORM_KAMU"
+               target="_blank"
+               class="winner">
+               Isi Data Pemenang
+            </a>
+        `;
+    }
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
