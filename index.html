@@ -2,85 +2,63 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kuis Interaktif Custom</title>
+<title>Kuis Koperasi</title>
+
 <style>
-    :root{
-        --primary:#ff6b6b;
-        --secondary:#4ecdc4;
-        --bg:#f7f9fc;
-    }
+body{
+    font-family: Arial, sans-serif;
+    text-align:center;
+    background:#f4f6f9;
+    padding:30px;
+}
 
-    body{
-        font-family: Arial, sans-serif;
-        background: var(--bg);
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        height:100vh;
-        margin:0;
-    }
+#quiz-box{
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    max-width:500px;
+    margin:auto;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
 
-    .quiz-box{
-        background:white;
-        padding:30px;
-        width:400px;
-        border-radius:15px;
-        box-shadow:0 10px 25px rgba(0,0,0,0.1);
-        text-align:center;
-    }
+.btn{
+    display:block;
+    width:100%;
+    margin:8px 0;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#4CAF50;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
 
-    h2{
-        margin-bottom:15px;
-    }
+.btn:hover{
+    background:#45a049;
+}
 
-    .btn{
-        display:block;
-        margin:10px 0;
-        padding:10px;
-        border:none;
-        border-radius:8px;
-        cursor:pointer;
-        background:var(--secondary);
-        color:white;
-        font-weight:bold;
-        transition:0.3s;
-    }
-
-    .btn:hover{
-        background:var(--primary);
-    }
-
-    .timer{
-        font-size:14px;
-        margin-bottom:10px;
-        color:#666;
-    }
-
-    .result{
-        font-size:18px;
-        font-weight:bold;
-    }
+#time{
+    font-weight:bold;
+    color:red;
+}
 </style>
 </head>
 <body>
 
-<div class="quiz-box">
-    <h2 id="question">Loading...</h2>
-    <div class="timer">Waktu: <span id="time">15</span> detik</div>
+<div id="quiz-box">
+    <h2 id="question"></h2>
     <div id="answers"></div>
-    <div class="result" id="result"></div>
+    <p>Sisa waktu: <span id="time">15</span> detik</p>
+    <div id="result"></div>
 </div>
 
 <script>
-// ===========================
-// CUSTOM PERTANYAAN DI SINI
-// ===========================
 const quizData = [
     {
         question: "Siapa Nama Pengawas Koperasi kita?",
         answers: ["Irenne", "Lusy", "Benita", "Elny"],
-        correct: 3   // index mulai dari 0 (Elny = index 3)
+        correct: 3
     },
     {
         question: "Salah satu usaha koperasi kita",
@@ -94,8 +72,6 @@ const quizData = [
     }
 ];
 
-// ===========================
-
 let currentQuestion = 0;
 let score = 0;
 let timer;
@@ -107,11 +83,14 @@ const resultEl = document.getElementById("result");
 const timeEl = document.getElementById("time");
 
 function startTimer(){
-    timeLeft = 15; // UBAH WAKTU DI SINI
+    clearInterval(timer);
+    timeLeft = 15;
     timeEl.textContent = timeLeft;
+
     timer = setInterval(()=>{
         timeLeft--;
         timeEl.textContent = timeLeft;
+
         if(timeLeft <= 0){
             clearInterval(timer);
             nextQuestion();
@@ -121,10 +100,11 @@ function startTimer(){
 
 function loadQuestion(){
     clearInterval(timer);
+
     const data = quizData[currentQuestion];
     questionEl.textContent = data.question;
     answersEl.innerHTML = "";
-    resultEl.textContent = "";
+    resultEl.innerHTML = "";
 
     data.answers.forEach((answer,index)=>{
         const btn = document.createElement("button");
@@ -139,14 +119,17 @@ function loadQuestion(){
 
 function checkAnswer(index){
     clearInterval(timer);
+
     if(index === quizData[currentQuestion].correct){
         score++;
     }
+
     nextQuestion();
 }
 
 function nextQuestion(){
     currentQuestion++;
+
     if(currentQuestion < quizData.length){
         loadQuestion();
     } else {
@@ -155,16 +138,18 @@ function nextQuestion(){
 }
 
 function showResult(){
+    clearInterval(timer);
+
     questionEl.textContent = "Kuis Selesai!";
     answersEl.innerHTML = "";
+    timeEl.textContent = "0";
 
     resultEl.innerHTML = "Skor kamu: " + score + " dari " + quizData.length;
 
-    // Jika semua jawaban benar
     if(score === quizData.length){
         resultEl.innerHTML += `
             <br><br>
-            🎉 Selamat! Kamu menjawab semua dengan benar! 🎉
+            🎉 Selamat! Semua jawaban benar! 🎉
             <br><br>
             <a href="https://forms.gle/rKVnJjrtDW9S8dEf9"
                target="_blank"
@@ -178,9 +163,27 @@ function showResult(){
                Klik di sini untuk isi data pemenang
             </a>
         `;
+    } else {
+        resultEl.innerHTML += `
+            <br><br>
+            ❌ Jawaban belum semuanya benar.
+            <br>Silakan coba lagi ya!
+        `;
     }
+
+    resultEl.innerHTML += `
+        <br><br>
+        <button class="btn" onclick="restartQuiz()">Ulangi Lagi</button>
+    `;
 }
 
+function restartQuiz(){
+    clearInterval(timer);
+    currentQuestion = 0;
+    score = 0;
+    timeLeft = 15;
+    loadQuestion();
+}
 
 loadQuestion();
 </script>
